@@ -1,0 +1,348 @@
+.solar-energy {
+  padding: 0;
+}
+
+.module-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.module-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.module-header p {
+  margin: 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.solar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.solar-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.overview-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.overview-card h3 {
+  margin: 0 0 1rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.capacity-input {
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4CAF50;
+  text-align: center;
+  width: 100px;
+}
+
+.capacity-input:focus {
+  outline: none;
+  background: white;
+  border-radius: 5px;
+  padding: 0.25rem;
+}
+
+.energy-chart {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.energy-chart h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chart-bar {
+  display: grid;
+  grid-template-columns: 120px 1fr 60px;
+  gap: 1rem;
+  align-items: center;
+}
+
+.bar-label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.bar-container {
+  height: 20px;
+  background: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.bar-value {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+  text-align: right;
+}
+
+.devices-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.add-device-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.add-device-btn:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.devices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.device-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.device-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.device-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.device-name {
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  padding: 0.25rem;
+  border-radius: 5px;
+}
+
+.device-name:focus {
+  outline: none;
+  background: white;
+  border: 1px solid #4CAF50;
+}
+
+.device-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.spec label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.spec input {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.spec input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.remove-device-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-device-btn:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+
+.ai-recommendations {
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+}
+
+.recommendations-content {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  min-height: 200px;
+}
+
+.recommendations-text {
+  line-height: 1.6;
+  color: #333;
+}
+
+.recommendations-text p {
+  margin: 0 0 1rem 0;
+}
+
+.recommendations-text p:last-child {
+  margin-bottom: 0;
+}
+
+.recommendations-placeholder {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.get-recommendations-btn {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.get-recommendations-btn:hover:not(:disabled) {
+  background: #1976D2;
+  transform: translateY(-1px);
+}
+
+.get-recommendations-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .solar-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .overview-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .device-specs {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-bar {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .bar-value {
+    text-align: left;
+  }
+}
