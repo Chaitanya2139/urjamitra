@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MockUser } from '../mockAuth';
-import Globe from './Globe';
+import Globe from './ui/Globe';
 import { 
   Leaf, 
   Zap, 
