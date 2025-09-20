@@ -1,20 +1,26 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MockUser } from '../mockAuth';
-import Globe from './ui/Globe';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   Leaf, 
   Zap, 
   Droplets, 
-  Award, 
   CheckCircle, 
   Star,
   ArrowRight,
   Play,
-  Shield,
   TrendingUp,
   Users,
-  Globe2
+  Globe2,
+  Sparkles,
+  Target,
+  BarChart3,
+  Heart,
+  TreePine,
+  Battery,
+  Wind,
+  Sun
 } from 'lucide-react';
 import './LandingPage.css';
 
@@ -25,12 +31,10 @@ interface LandingPageProps {
 
 const LandingPage: React.FC<LandingPageProps> = ({ onAuthClick, user }) => {
   const navigate = useNavigate();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const benefitsRef = useRef<HTMLDivElement>(null);
-  const testimonialsRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 1000], [0, -50]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   useEffect(() => {
     if (user) {
@@ -38,577 +42,1037 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAuthClick, user }) => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    const initAnimations = async () => {
-      try {
-        const gsap = (await import('gsap')).default;
-        const ScrollTrigger = (await import('gsap/ScrollTrigger')).default;
-        
-        // Register ScrollTrigger plugin
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Hero animation
-        gsap.fromTo(heroRef.current, 
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }
-        );
-
-        // Stats animation with stagger and counter animation
-        gsap.fromTo('.stat-card',
-          { opacity: 0, y: 30, scale: 0.8 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "back.out(1.7)",
-            scrollTrigger: {
-              trigger: statsRef.current,
-              start: "top 80%",
-              end: "bottom 20%",
-              toggleActions: "play none none reverse"
-            },
-            onComplete: () => {
-              // Animate counter numbers
-              document.querySelectorAll('.stat-number').forEach((el) => {
-                const target = parseInt(el.getAttribute('data-count') || '0');
-                const isFloat = el.textContent?.includes('.') || false;
-                let current = 0;
-                const increment = target / 100;
-                const timer = setInterval(() => {
-                  current += increment;
-                  if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                  }
-                  el.textContent = isFloat ? 
-                    current.toFixed(1) + (el.textContent?.includes('%') ? '%' : '') :
-                    Math.floor(current).toLocaleString() + (el.textContent?.includes('+') ? '+' : '');
-                }, 30);
-              });
-            }
-          }
-        );
-
-        // Features animation
-        gsap.fromTo('.feature-card',
-          { opacity: 0, y: 50, rotationX: 15 },
-          {
-            opacity: 1,
-            y: 0,
-            rotationX: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: featuresRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        // Benefits animation
-        gsap.fromTo('.benefit-item',
-          { opacity: 0, x: -50 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: benefitsRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        // Testimonials animation
-        gsap.fromTo('.testimonial-card',
-          { opacity: 0, scale: 0.8, rotation: 5 },
-          {
-            opacity: 1,
-            scale: 1,
-            rotation: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: "elastic.out(1, 0.3)",
-            scrollTrigger: {
-              trigger: testimonialsRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        // CTA animation
-        gsap.fromTo(ctaRef.current,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ctaRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
-        // Parallax effect for hero background
-        gsap.to('.hero-background', {
-          yPercent: -50,
-          ease: "none",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-          }
-        });
-
-      } catch (error) {
-        console.warn('GSAP animations could not be loaded:', error);
-        // Fallback: simple CSS animations
-        if (heroRef.current) {
-          heroRef.current.style.opacity = '1';
-          heroRef.current.style.transform = 'translateY(0)';
-        }
+  // Animation variants with correct TypeScript types
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: 0.8, 
+        ease: "easeOut" as const
       }
-    };
+    }
+  };
 
-    initAnimations();
-  }, []);
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const scaleIn = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: { 
+      scale: 1, 
+      opacity: 1,
+      transition: { 
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
+
+  const slideInLeft = {
+    hidden: { x: -100, opacity: 0 },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: { 
+        duration: 0.8,
+        ease: "easeOut" as const
+      }
+    }
+  };
+
+  const slideInRight = {
+    hidden: { x: 100, opacity: 0 },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: { 
+        duration: 0.8,
+        ease: "easeOut" as const
+      }
+    }
+  };
+
+  const bounceIn = {
+    hidden: { scale: 0, rotate: -180 },
+    visible: {
+      scale: 1,
+      rotate: 0,
+      transition: {
+        type: "spring" as const,
+        stiffness: 260,
+        damping: 20
+      }
+    }
+  };
+
+  // Feature data
+  const features = [
+    {
+      icon: Sun,
+      title: "Smart Solar Optimization",
+      description: "AI-powered algorithms maximize your solar panel efficiency, increasing energy generation by up to 40%",
+      color: "from-yellow-400 to-orange-500"
+    },
+    {
+      icon: Droplets,
+      title: "Water Conservation",
+      description: "Track and optimize water usage with smart monitoring that can reduce consumption by 25%",
+      color: "from-blue-400 to-cyan-500"
+    },
+    {
+      icon: TreePine,
+      title: "Carbon Footprint Tracker",
+      description: "Monitor and reduce your environmental impact with real-time carbon footprint analysis",
+      color: "from-green-400 to-emerald-500"
+    },
+    {
+      icon: Battery,
+      title: "Energy Storage Manager",
+      description: "Optimize battery storage and usage patterns for maximum efficiency and cost savings",
+      color: "from-purple-400 to-indigo-500"
+    },
+    {
+      icon: Wind,
+      title: "Smart Grid Integration",
+      description: "Seamlessly connect with smart grids for optimal energy distribution and cost reduction",
+      color: "from-teal-400 to-blue-500"
+    },
+    {
+      icon: Zap,
+      title: "AI Insights & Tips",
+      description: "Receive personalized recommendations to improve sustainability and save money",
+      color: "from-amber-400 to-yellow-500"
+    }
+  ];
+
+  const stats = [
+    { number: "100K+", label: "Happy Families", icon: Users },
+    { number: "70%", label: "CO2 Reduction", icon: TreePine },
+    { number: "$2,500", label: "Annual Savings", icon: TrendingUp },
+    { number: "4.9★", label: "User Rating", icon: Star }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Homeowner",
+      content: "UrjaMitra transformed our home's energy efficiency. We're saving $300 monthly and feeling great about our environmental impact!",
+      rating: 5,
+      savings: "$3,600/year"
+    },
+    {
+      name: "Michael Chen",
+      role: "Solar Enthusiast",
+      content: "The AI recommendations are spot-on. My solar panels are now 45% more efficient thanks to UrjaMitra's optimization.",
+      rating: 5,
+      savings: "$2,800/year"
+    },
+    {
+      name: "Emily Rodriguez",
+      role: "Eco-Warrior",
+      content: "Amazing platform! The water tracking feature helped us reduce consumption by 30%. Our kids love the gamification aspect.",
+      rating: 5,
+      savings: "$1,200/year"
+    }
+  ];
 
   return (
     <div className="landing-page">
-      {/* Header */}
-      <header className="header">
+      {/* Navigation Header */}
+      <motion.header 
+        className="header"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{ 
+          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 23, 42, 0.9)'
+        }}
+      >
         <div className="container">
-          <div className="logo">
-            <div className="logo-icon">
+          <motion.div 
+            className="logo"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <motion.div 
+              className="logo-icon"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
               <Leaf size={32} />
-            </div>
+            </motion.div>
             <div>
               <h1>UrjaMitra</h1>
-              <span>Your AI-Powered Sustainability Companion</span>
+              <span>Your AI-Powered Sustainability Partner</span>
             </div>
-          </div>
+          </motion.div>
+          
           <nav className="nav">
-            <a href="#features" className="nav-link">Features</a>
-            <a href="#benefits" className="nav-link">Benefits</a>
-            <a href="#testimonials" className="nav-link">Reviews</a>
-            <button className="auth-btn" onClick={onAuthClick}>
-              Get Started Free
+            {['Home', 'Features', 'About', 'Contact'].map((item, index) => (
+              <motion.a 
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="nav-link"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index, duration: 0.6 }}
+                whileHover={{ y: -2, color: "#6ee7b7" }}
+              >
+                {item}
+              </motion.a>
+            ))}
+            <motion.button 
+              className="auth-btn"
+              onClick={onAuthClick}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Get Started
               <ArrowRight size={16} />
-            </button>
+            </motion.button>
           </nav>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
-      <section className="hero" ref={heroRef}>
-        <div className="hero-background"></div>
+      <section className="hero" id="home">
+        <motion.div className="hero-bg" style={{ y: y1, opacity }} />
         <div className="container">
-          <div className="hero-content">
-            <div className="hero-badge">
-              <Shield size={16} />
-              <span>Trusted by 50,000+ Eco-Warriors</span>
-            </div>
-            <h1>Transform Your Home into a 
-              <span className="gradient-text"> Sustainable Powerhouse</span>
-            </h1>
-            <p className="hero-subtitle">
-              Harness the power of AI to optimize solar energy, reduce carbon footprint by up to 60%, 
-              and make every drop of water count. Join the green revolution and save $2,000+ annually.
-            </p>
+          <motion.div 
+            className="hero-content"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div 
+              className="hero-badge"
+              variants={scaleIn}
+              whileHover={{ scale: 1.05 }}
+            >
+              <Sparkles size={16} />
+              <span>Trusted by 100,000+ Eco-Warriors Worldwide</span>
+            </motion.div>
             
-            <div className="hero-features">
-              <div className="hero-feature">
-                <CheckCircle size={20} />
-                <span>30% More Solar Efficiency</span>
-              </div>
-              <div className="hero-feature">
-                <CheckCircle size={20} />
-                <span>Real-time Impact Tracking</span>
-              </div>
-              <div className="hero-feature">
-                <CheckCircle size={20} />
-                <span>AI-Powered Recommendations</span>
-              </div>
-            </div>
+            <motion.h1 
+              className="hero-title"
+              variants={fadeInUp}
+            >
+              Transform Your Home into a{' '}
+              <motion.span 
+                className="gradient-text"
+                animate={{ 
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+              >
+                Sustainable Powerhouse
+              </motion.span>
+            </motion.h1>
+            
+            <motion.p 
+              className="hero-subtitle"
+              variants={fadeInUp}
+            >
+              Harness cutting-edge AI to optimize solar energy, slash carbon emissions by 70%, 
+              and create a healthier planet for future generations. Save $2,500+ annually while 
+              making a real environmental impact.
+            </motion.p>
+            
+            <motion.div 
+              className="hero-features"
+              variants={staggerContainer}
+            >
+              {[
+                { icon: Zap, text: "40% More Solar Efficiency" },
+                { icon: BarChart3, text: "Real-time Impact Analytics" },
+                { icon: Target, text: "AI-Powered Optimization" }
+              ].map((feature, index) => (
+                <motion.div 
+                  key={index}
+                  className="hero-feature"
+                  variants={slideInLeft}
+                  whileHover={{ x: 10, scale: 1.02 }}
+                >
+                  <motion.div
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <feature.icon size={20} />
+                  </motion.div>
+                  <span>{feature.text}</span>
+                </motion.div>
+              ))}
+            </motion.div>
 
-            <div className="cta-buttons">
-              <button className="primary-btn" onClick={onAuthClick}>
+            <motion.div 
+              className="cta-buttons"
+              variants={fadeInUp}
+            >
+              <motion.button 
+                className="primary-btn"
+                onClick={onAuthClick}
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -3,
+                  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 200 }}
+              >
                 <Play size={20} />
-                Start Your Journey
-              </button>
-              <button className="secondary-btn">
+                Start Your Green Journey
+              </motion.button>
+              
+              <motion.button 
+                className="secondary-btn"
+                whileHover={{ 
+                  scale: 1.02,
+                  backgroundColor: "rgba(255, 255, 255, 0.15)"
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <Play size={16} />
-                Watch Demo (2 min)
-              </button>
-            </div>
+                Watch Success Stories (3 min)
+              </motion.button>
+            </motion.div>
             
-            <div className="trust-indicators">
-              <div className="trust-item">
-                <Star className="star-icon" size={16} />
-                <span>4.9/5 User Rating</span>
-              </div>
-              <div className="trust-item">
-                <Users size={16} />
-                <span>50,000+ Happy Users</span>
-              </div>
-            </div>
-          </div>
+            <motion.div 
+              className="trust-indicators"
+              variants={staggerContainer}
+            >
+              {[
+                { icon: Star, text: "4.9/5 User Rating" },
+                { icon: Users, text: "100,000+ Happy Families" },
+                { icon: Heart, text: "99% Customer Satisfaction" }
+              ].map((item, index) => (
+                <motion.div 
+                  key={index}
+                  className="trust-item"
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                >
+                  <item.icon className="trust-icon" size={16} />
+                  <span>{item.text}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
           
-          <div className="hero-visual">
-            <div className="globe-wrapper">
-              <Globe />
-              <div className="energy-rings"></div>
-            </div>
-          </div>
+          <motion.div 
+            className="hero-visual"
+            initial={{ opacity: 0, scale: 0.8, rotateY: 15 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: "easeOut",
+              delay: 0.5
+            }}
+            style={{ y: y2 }}
+          >
+            <motion.div 
+              className="floating-orb"
+              animate={{ 
+                y: [-20, 20, -20],
+                rotateY: [0, 360],
+                scale: [1, 1.05, 1]
+              }}
+              transition={{ 
+                y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                rotateY: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+              }}
+              whileHover={{
+                scale: 1.1,
+                boxShadow: "0 0 100px rgba(110, 231, 183, 0.5)",
+                transition: { duration: 0.3 }
+              }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              >
+                <Globe2 size={120} />
+              </motion.div>
+            </motion.div>
+            
+            {/* Enhanced floating particles with different sizes */}
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={`particle particle-${i % 3}`}
+                style={{
+                  width: `${4 + (i % 3) * 2}px`,
+                  height: `${4 + (i % 3) * 2}px`,
+                }}
+                initial={{ 
+                  x: Math.random() * 400 - 200,
+                  y: Math.random() * 400 - 200,
+                  opacity: 0,
+                  scale: 0
+                }}
+                animate={{
+                  x: Math.random() * 600 - 300,
+                  y: Math.random() * 600 - 300,
+                  opacity: [0, 0.8, 0.6, 0],
+                  scale: [0, 1, 0.8, 0]
+                }}
+                transition={{
+                  duration: 8 + Math.random() * 6,
+                  repeat: Infinity,
+                  delay: i * 0.3,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
+
+            {/* Orbital rings around the main orb */}
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={`ring-${i}`}
+                className="orbital-ring"
+                style={{
+                  position: 'absolute',
+                  width: `${220 + i * 40}px`,
+                  height: `${220 + i * 40}px`,
+                  border: `1px solid rgba(110, 231, 183, ${0.1 - i * 0.02})`,
+                  borderRadius: '50%',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  pointerEvents: 'none'
+                }}
+                animate={{ 
+                  rotate: 360 
+                }}
+                transition={{ 
+                  duration: 20 + i * 5, 
+                  repeat: Infinity, 
+                  ease: "linear" 
+                }}
+              />
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="stats" ref={statsRef}>
+      <section className="stats" id="impact">
         <div className="container">
-          <div className="stats-header">
-            <h2>Real Impact, Real Results</h2>
-            <p>Join thousands of families making a measurable difference</p>
-          </div>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">
-                <Zap />
-              </div>
-              <div className="stat-number" data-count="2500000">2.5M+</div>
-              <div className="stat-label">Homes Powered by Solar</div>
-              <div className="stat-change">↗ 15% this month</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">
-                <TrendingUp />
-              </div>
-              <div className="stat-number" data-count="60">60%</div>
-              <div className="stat-label">Average Energy Savings</div>
-              <div className="stat-change">↗ 8% this month</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">
-                <Leaf />
-              </div>
-              <div className="stat-number" data-count="25000">25K+</div>
-              <div className="stat-label">Tons CO₂ Reduced</div>
-              <div className="stat-change">↗ 12% this month</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">
-                <Droplets />
-              </div>
-              <div className="stat-number" data-count="800000">800K+</div>
-              <div className="stat-label">Liters Water Saved</div>
-              <div className="stat-change">↗ 20% this month</div>
-            </div>
-          </div>
+          <motion.div 
+            className="stats-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                className="stat-card"
+                variants={scaleIn}
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -5,
+                  boxShadow: "0 10px 30px rgba(16, 185, 129, 0.3)"
+                }}
+              >
+                <motion.div
+                  className="stat-icon"
+                  variants={bounceIn}
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <stat.icon size={32} />
+                </motion.div>
+                <motion.div 
+                  className="stat-number"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ delay: 0.2 + index * 0.1, type: "spring", stiffness: 200 }}
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="stat-label">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="features" ref={featuresRef} id="features">
+      <section className="features" id="features">
         <div className="container">
-          <div className="section-header">
-            <h2>Powerful AI Features for a Greener Tomorrow</h2>
-            <p>Everything you need to transform your home into an eco-friendly powerhouse</p>
-          </div>
-          
-          <div className="features-grid">
-            <div className="feature-card featured">
-              <div className="feature-icon">
-                <Zap />
-              </div>
-              <h3>Smart Solar Optimization</h3>
-              <p>AI-powered scheduling maximizes your solar panel efficiency by 35%. 
-                 Automatically adjust energy usage based on weather patterns and consumption habits.</p>
-              <ul className="feature-list">
-                <li>Predictive weather analysis</li>
-                <li>Automated device scheduling</li>
-                <li>Real-time efficiency monitoring</li>
-              </ul>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Leaf />
-              </div>
-              <h3>Carbon Footprint Tracking</h3>
-              <p>Smart analysis of your purchases, travel, and lifestyle choices with personalized 
-                 recommendations to reduce your environmental impact.</p>
-              <ul className="feature-list">
-                <li>Purchase impact analysis</li>
-                <li>Transport tracking</li>
-                <li>Lifestyle optimization</li>
-              </ul>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Droplets />
-              </div>
-              <h3>Water Intelligence System</h3>
-              <p>Monitor water quality in real-time and optimize usage patterns to save up to 40% 
-                 on your water bills while ensuring safety.</p>
-              <ul className="feature-list">
-                <li>Quality monitoring</li>
-                <li>Leak detection</li>
-                <li>Usage optimization</li>
-              </ul>
-            </div>
-            
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Award />
-              </div>
-              <h3>Gamified Eco-Challenges</h3>
-              <p>Earn points, badges, and rewards for sustainable actions. Compete with friends 
-                 and neighbors to create a positive environmental impact.</p>
-              <ul className="feature-list">
-                <li>Daily eco-challenges</li>
-                <li>Community leaderboards</li>
-                <li>Reward marketplace</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+          <motion.div 
+            className="section-header"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeInUp}
+          >
+            <motion.div
+              className="section-badge"
+              variants={scaleIn}
+            >
+              <Sparkles size={16} />
+              <span>Powerful Features</span>
+            </motion.div>
+            <h2>Everything You Need for Sustainable Living</h2>
+            <p>Comprehensive AI-powered tools to optimize energy, water, and environmental impact</p>
+          </motion.div>
 
-      {/* Benefits Section */}
-      <section className="benefits" ref={benefitsRef} id="benefits">
-        <div className="container">
-          <div className="benefits-content">
-            <div className="benefits-text">
-              <h2>Why Choose UrjaMitra?</h2>
-              <p className="benefits-subtitle">
-                Join the sustainable living revolution with AI-powered insights that make a real difference
-              </p>
-              
-              <div className="benefits-list">
-                <div className="benefit-item">
-                  <div className="benefit-icon">
-                    <TrendingUp />
-                  </div>
-                  <div className="benefit-content">
-                    <h4>Save $2,000+ Annually</h4>
-                    <p>Optimize energy and water usage to dramatically reduce utility bills</p>
-                  </div>
-                </div>
-                
-                <div className="benefit-item">
-                  <div className="benefit-icon">
-                    <Globe2 />
-                  </div>
-                  <div className="benefit-content">
-                    <h4>Reduce Carbon Footprint by 60%</h4>
-                    <p>Make a measurable impact on climate change with data-driven decisions</p>
-                  </div>
-                </div>
-                
-                <div className="benefit-item">
-                  <div className="benefit-icon">
-                    <Shield />
-                  </div>
-                  <div className="benefit-content">
-                    <h4>Health & Safety Monitoring</h4>
-                    <p>Ensure your family's wellbeing with real-time water and air quality tracking</p>
-                  </div>
-                </div>
-                
-                <div className="benefit-item">
-                  <div className="benefit-icon">
-                    <Users />
-                  </div>
-                  <div className="benefit-content">
-                    <h4>Community Impact</h4>
-                    <p>Connect with like-minded families and amplify your environmental impact</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="benefits-visual">
-              <div className="benefit-card floating">
-                <div className="benefit-stat">
-                  <span className="stat-big">$2,340</span>
-                  <span className="stat-label">Annual Savings</span>
-                </div>
-              </div>
-              <div className="benefit-card floating delay-1">
-                <div className="benefit-stat">
-                  <span className="stat-big">4.2 tons</span>
-                  <span className="stat-label">CO₂ Reduced</span>
-                </div>
-              </div>
-              <div className="benefit-card floating delay-2">
-                <div className="benefit-stat">
-                  <span className="stat-big">15,680L</span>
-                  <span className="stat-label">Water Saved</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <motion.div 
+            className="features-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="feature-card"
+                variants={fadeInUp}
+                whileHover={{ 
+                  y: -12, 
+                  scale: 1.02,
+                  rotateY: 2,
+                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.15)"
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                onHoverStart={() => {
+                  // Add a subtle glow effect
+                }}
+              >
+                <motion.div 
+                  className={`feature-icon bg-gradient-to-br ${feature.color}`}
+                  whileHover={{ 
+                    scale: 1.15, 
+                    rotate: 360,
+                    boxShadow: "0 15px 35px rgba(0, 0, 0, 0.2)"
+                  }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <feature.icon size={28} />
+                </motion.div>
+                <motion.h3
+                  whileHover={{ color: "#6ee7b7" }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {feature.title}
+                </motion.h3>
+                <p>{feature.description}</p>
+                <motion.div
+                  className="feature-link"
+                  whileHover={{ x: 8, color: "#10b981" }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <span>Learn More</span>
+                  <motion.div
+                    whileHover={{ x: 4 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <ArrowRight size={16} />
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="testimonials" ref={testimonialsRef} id="testimonials">
+      <section className="testimonials" id="testimonials">
         <div className="container">
-          <div className="section-header">
-            <h2>Loved by Families Worldwide</h2>
-            <p>See how UrjaMitra is transforming homes and lives</p>
-          </div>
-          
-          <div className="testimonials-grid">
-            <div className="testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="star-filled" />
-                ))}
-              </div>
-              <p>"UrjaMitra helped us save $3,200 last year! The AI recommendations are spot-on, 
-                 and our solar panels are now 40% more efficient."</p>
-              <div className="testimonial-author">
-                <div className="author-avatar">SM</div>
-                <div className="author-info">
-                  <strong>Sarah Mitchell</strong>
-                  <span>San Francisco, CA</span>
+          <motion.div 
+            className="section-header"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeInUp}
+          >
+            <motion.div
+              className="section-badge"
+              variants={scaleIn}
+            >
+              <Heart size={16} />
+              <span>Customer Love</span>
+            </motion.div>
+            <h2>Loved by Eco-Warriors Worldwide</h2>
+            <p>See how families are transforming their homes and saving thousands</p>
+          </motion.div>
+
+          <motion.div 
+            className="testimonials-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="testimonial-card"
+                variants={slideInLeft}
+                whileHover={{ 
+                  y: -5, 
+                  scale: 1.02 
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="testimonial-header">
+                  <div className="stars">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ scale: 0, rotate: 180 }}
+                        whileInView={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
+                      >
+                        <Star size={16} className="star-filled" />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <div className="savings-badge">{testimonial.savings}</div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="star-filled" />
-                ))}
-              </div>
-              <p>"The water monitoring feature caught a leak that could have cost us thousands. 
-                 UrjaMitra paid for itself in the first month!"</p>
-              <div className="testimonial-author">
-                <div className="author-avatar">DJ</div>
-                <div className="author-info">
-                  <strong>David Johnson</strong>
-                  <span>Austin, TX</span>
+                <p className="testimonial-content">"{testimonial.content}"</p>
+                <div className="testimonial-author">
+                  <div className="author-info">
+                    <h4>{testimonial.name}</h4>
+                    <span>{testimonial.role}</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div className="testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="star-filled" />
-                ))}
-              </div>
-              <p>"My kids love the eco-challenges! We've reduced our carbon footprint by 55% 
-                 while having fun as a family. It's a win-win!"</p>
-              <div className="testimonial-author">
-                <div className="author-avatar">EP</div>
-                <div className="author-info">
-                  <strong>Emily Parker</strong>
-                  <span>Seattle, WA</span>
-                </div>
-              </div>
-            </div>
-          </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="final-cta" ref={ctaRef}>
+      {/* How It Works Section */}
+      <section className="how-it-works" id="about">
         <div className="container">
-          <div className="cta-content">
-            <h2>Ready to Transform Your Home?</h2>
-            <p>Join 50,000+ families already saving money and the planet</p>
+          <motion.div 
+            className="section-header"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeInUp}
+          >
+            <motion.div
+              className="section-badge"
+              variants={scaleIn}
+            >
+              <Target size={16} />
+              <span>How It Works</span>
+            </motion.div>
+            <h2>Simple Steps to Sustainable Living</h2>
+            <p>Transform your home into an eco-friendly powerhouse with our easy 3-step process</p>
+          </motion.div>
+
+          <motion.div 
+            className="steps-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {[
+              {
+                step: "01",
+                title: "Connect & Analyze",
+                description: "Link your smart devices and let our AI analyze your energy consumption patterns, water usage, and carbon footprint in real-time.",
+                icon: BarChart3,
+                color: "from-blue-400 to-blue-600"
+              },
+              {
+                step: "02", 
+                title: "Get Insights",
+                description: "Receive personalized recommendations and actionable insights to optimize your energy usage and reduce environmental impact.",
+                icon: Sparkles,
+                color: "from-green-400 to-green-600"
+              },
+              {
+                step: "03",
+                title: "Save & Impact",
+                description: "Implement suggested changes and watch your savings grow while making a positive impact on the environment.",
+                icon: Heart,
+                color: "from-purple-400 to-purple-600"
+              }
+            ].map((step, index) => (
+              <motion.div
+                key={index}
+                className="step-card"
+                variants={fadeInUp}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02 
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="step-number">{step.step}</div>
+                <motion.div 
+                  className={`step-icon bg-gradient-to-br ${step.color}`}
+                  whileHover={{ 
+                    scale: 1.1, 
+                    rotate: 5 
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <step.icon size={32} />
+                </motion.div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section className="about">
+        <div className="container">
+          <motion.div 
+            className="about-content"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainer}
+          >
+            <motion.div className="about-text" variants={slideInLeft}>
+              <motion.div
+                className="section-badge"
+                variants={scaleIn}
+              >
+                <Globe2 size={16} />
+                <span>Our Mission</span>
+              </motion.div>
+              <h2>Building a Sustainable Future, One Home at a Time</h2>
+              <p>
+                At UrjaMitra, we believe that every individual has the power to make a meaningful 
+                impact on our planet. Our cutting-edge AI technology democratizes access to 
+                sustainability insights, making it easy for families worldwide to reduce their 
+                environmental footprint while saving money.
+              </p>
+              <div className="about-features">
+                {[
+                  { icon: Users, text: "100,000+ Families Empowered" },
+                  { icon: TreePine, text: "2M+ Tons CO2 Saved" },
+                  { icon: Zap, text: "50+ Countries Served" }
+                ].map((feature, index) => (
+                  <motion.div 
+                    key={index}
+                    className="about-feature"
+                    variants={fadeInUp}
+                    whileHover={{ x: 10, scale: 1.02 }}
+                  >
+                    <feature.icon size={20} />
+                    <span>{feature.text}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
             
-            <div className="cta-features">
-              <div className="cta-feature">
-                <CheckCircle size={20} />
-                <span>Free 30-day trial</span>
+            <motion.div 
+              className="about-visual"
+              variants={slideInRight}
+            >
+              <motion.div 
+                className="about-card"
+                whileHover={{ 
+                  y: -10,
+                  rotateY: 5,
+                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.2)"
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="about-stats">
+                  {[
+                    { value: "70%", label: "CO2 Reduction", icon: TreePine },
+                    { value: "$2,500", label: "Avg. Savings", icon: TrendingUp },
+                    { value: "99%", label: "Satisfaction", icon: Star }
+                  ].map((stat, index) => (
+                    <motion.div 
+                      key={index}
+                      className="about-stat"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <stat.icon size={24} />
+                      <div className="stat-number">{stat.value}</div>
+                      <div className="stat-label">{stat.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="contact" id="contact">
+        <div className="container">
+          <motion.div 
+            className="contact-content"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainer}
+          >
+            <motion.div className="contact-info" variants={slideInLeft}>
+              <motion.div
+                className="section-badge"
+                variants={scaleIn}
+              >
+                <Heart size={16} />
+                <span>Get In Touch</span>
+              </motion.div>
+              <h2>Ready to Start Your Sustainable Journey?</h2>
+              <p>
+                Have questions about how UrjaMitra can help your family reduce environmental impact 
+                and save money? Our team of sustainability experts is here to help.
+              </p>
+              
+              <div className="contact-methods">
+                {[
+                  { 
+                    icon: Users, 
+                    title: "Expert Support", 
+                    description: "Get personalized guidance from our sustainability experts"
+                  },
+                  { 
+                    icon: Sparkles, 
+                    title: "Custom Solutions", 
+                    description: "Tailored recommendations for your home and lifestyle"
+                  },
+                  { 
+                    icon: TrendingUp, 
+                    title: "Proven Results", 
+                    description: "Join thousands of families already saving money and planet"
+                  }
+                ].map((method, index) => (
+                  <motion.div 
+                    key={index}
+                    className="contact-method"
+                    variants={fadeInUp}
+                    whileHover={{ x: 10, scale: 1.02 }}
+                  >
+                    <method.icon size={24} />
+                    <div>
+                      <h4>{method.title}</h4>
+                      <p>{method.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <div className="cta-feature">
-                <CheckCircle size={20} />
-                <span>No credit card required</span>
-              </div>
-              <div className="cta-feature">
-                <CheckCircle size={20} />
-                <span>Cancel anytime</span>
-              </div>
-            </div>
+            </motion.div>
             
-            <div className="cta-buttons-large">
-              <button className="primary-btn-large" onClick={onAuthClick}>
-                Start Your Free Trial
-                <ArrowRight size={20} />
-              </button>
-              <p className="cta-subtext">Start seeing results in 24 hours</p>
-            </div>
-          </div>
+            <motion.div 
+              className="contact-form"
+              variants={slideInRight}
+            >
+              <motion.div 
+                className="form-card"
+                whileHover={{ 
+                  y: -5,
+                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.15)"
+                }}
+              >
+                <h3>Get Started Today</h3>
+                <p>Join the sustainable living revolution</p>
+                
+                <motion.button
+                  className="primary-btn full-width"
+                  onClick={onAuthClick}
+                  whileHover={{ 
+                    scale: 1.02, 
+                    y: -2,
+                    boxShadow: "0 15px 35px rgba(16, 185, 129, 0.4)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Play size={20} />
+                  Begin Your Journey
+                </motion.button>
+                
+                <div className="contact-benefits">
+                  {[
+                    "Instant AI analysis",
+                    "Personalized recommendations", 
+                    "24/7 support access",
+                    "Community of eco-warriors"
+                  ].map((benefit, index) => (
+                    <motion.div 
+                      key={index}
+                      className="contact-benefit"
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <CheckCircle size={16} />
+                      <span>{benefit}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta">
+        <div className="container">
+          <motion.div 
+            className="cta-content"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainer}
+          >
+            <motion.div
+              className="cta-badge"
+              variants={scaleIn}
+            >
+              <Sparkles size={16} />
+              <span>Ready to Transform?</span>
+            </motion.div>
+            
+            <motion.h2 variants={fadeInUp}>
+              Join 100,000+ Families Building a 
+              <span className="gradient-text"> Sustainable Future</span>
+            </motion.h2>
+            
+            <motion.p variants={fadeInUp}>
+              Start your journey today with our free trial. No credit card required, 
+              cancel anytime. Experience the power of AI-driven sustainability.
+            </motion.p>
+
+            <motion.div 
+              className="cta-buttons"
+              variants={fadeInUp}
+            >
+              <motion.button 
+                className="primary-btn large"
+                onClick={onAuthClick}
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -3,
+                  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.4)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 200 }}
+              >
+                <Play size={24} />
+                Get Started Now
+              </motion.button>
+              
+              <motion.div
+                className="trial-info"
+                variants={slideInRight}
+              >
+                <CheckCircle size={16} />
+                <span>Quick setup • No credit card required</span>
+              </motion.div>
+            </motion.div>
+
+            <motion.div 
+              className="final-stats"
+              variants={staggerContainer}
+            >
+              {[
+                { value: "2 minutes", label: "Setup time" },
+                { value: "$0", label: "Upfront cost" },
+                { value: "24/7", label: "AI monitoring" }
+              ].map((item, index) => (
+                <motion.div 
+                  key={index}
+                  className="final-stat"
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span className="stat-value">{item.value}</span>
+                  <span className="stat-label">{item.label}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <div className="footer-content">
+          <motion.div 
+            className="footer-content"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <div className="footer-brand">
               <div className="logo">
-                <div className="logo-icon">
-                  <Leaf size={24} />
-                </div>
+                <Leaf size={32} />
                 <div>
                   <h3>UrjaMitra</h3>
-                  <span>Sustainable Living Made Simple</span>
+                  <span>Building a sustainable tomorrow</span>
                 </div>
               </div>
-              <p>Building a sustainable future, one home at a time.</p>
+              <p>Empowering families worldwide to create sustainable homes through AI-powered optimization.</p>
             </div>
             
             <div className="footer-links">
-              <div className="footer-column">
+              <div className="link-group">
                 <h4>Product</h4>
                 <a href="#features">Features</a>
                 <a href="#pricing">Pricing</a>
-                <a href="#integrations">Integrations</a>
-                <a href="#api">API</a>
+                <a href="#demo">Demo</a>
               </div>
-              <div className="footer-column">
+              <div className="link-group">
                 <h4>Company</h4>
-                <a href="#about">About Us</a>
+                <a href="#about">About</a>
                 <a href="#careers">Careers</a>
-                <a href="#press">Press</a>
                 <a href="#contact">Contact</a>
               </div>
-              <div className="footer-column">
-                <h4>Resources</h4>
-                <a href="#blog">Blog</a>
-                <a href="#guides">Guides</a>
+              <div className="link-group">
+                <h4>Support</h4>
                 <a href="#help">Help Center</a>
+                <a href="#docs">Documentation</a>
                 <a href="#community">Community</a>
               </div>
             </div>
-          </div>
+          </motion.div>
           
-          <div className="footer-bottom">
+          <motion.div 
+            className="footer-bottom"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
             <p>&copy; 2024 UrjaMitra. All rights reserved.</p>
-            <div className="footer-legal">
-              <a href="#privacy">Privacy Policy</a>
-              <a href="#terms">Terms of Service</a>
-              <a href="#cookies">Cookie Policy</a>
+            <div className="footer-badges">
+              <span className="badge">🌱 Carbon Neutral</span>
+              <span className="badge">⚡ Powered by Green Energy</span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </footer>
     </div>
