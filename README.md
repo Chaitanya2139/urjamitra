@@ -70,7 +70,7 @@ UrjaMitra is a modern, interactive web application that helps users optimize the
    - Copy `env.example` to `.env`
    - Add your Gemini API key for AI features:
    ```env
-   REACT_APP_GEMINI_API_KEY=your_gemini_api_key
+   REACT_APP_GEMINI_API_KEY=AIzaSyAZqimBViNUgKUAXfM2i_nHnTNH-hbhQcE
    ```
 
 4. **Google Gemini Setup (Optional)**

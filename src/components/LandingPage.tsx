@@ -259,14 +259,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAuthClick, user }) => {
             initial="hidden"
             animate="visible"
           >
-            <motion.div 
+            {/* <motion.div 
               className="hero-badge"
               variants={scaleIn}
               whileHover={{ scale: 1.05 }}
             >
               <Sparkles size={16} />
               <span>Trusted by 100,000+ Eco-Warriors Worldwide</span>
-            </motion.div>
+            </motion.div> */}
             
             <motion.h1 
               className="hero-title"

@@ -89,11 +89,22 @@ const SolarEnergy: React.FC = () => {
       if (data.success && data.management_plan) {
         setManagementPlan(data.management_plan);
       } else {
-        setError(data.error || 'Failed to get AI recommendations');
+        // Check for quota exceeded error in the error message
+        if (data.error && data.error.includes('429')) {
+          setError('⚠️ API quota exceeded. Solar analysis is temporarily in demo mode. Please try again later.');
+        } else {
+          setError(data.error || 'Failed to get AI recommendations');
+        }
       }
     } catch (error) {
       console.error('Error getting AI recommendations:', error);
-      setError('Unable to connect to the solar analysis service. Please ensure the backend is running.');
+      
+      // Check if it's a quota error
+      if (error instanceof Error && error.message.includes('429')) {
+        setError('⚠️ API quota exceeded. Solar analysis is temporarily in demo mode. Please try again later.');
+      } else {
+        setError('Unable to connect to the solar analysis service. Please ensure the backend is running.');
+      }
     } finally {
       setIsLoading(false);
     }

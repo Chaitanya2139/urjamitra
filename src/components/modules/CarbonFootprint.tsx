@@ -313,8 +313,15 @@ const CarbonFootprint: React.FC = () => {
     } catch (err) {
       console.error('Analysis error:', err);
       
+      // Check for quota exceeded error
+      if (err instanceof Error && err.message.includes('429')) {
+        setError('⚠️ API quota exceeded. Please try again later or upgrade your plan. Using demo mode for now.');
+        console.log('Quota exceeded, falling back to demo mode...');
+        setIsBackendConnected(false);
+        await runDemoAnalysis();
+      }
       // If backend is not available, fall back to demo mode
-      if (err instanceof TypeError && err.message.includes('fetch')) {
+      else if (err instanceof TypeError && err.message.includes('fetch')) {
         console.log('Backend not available, using demo mode...');
         setIsBackendConnected(false);
         
