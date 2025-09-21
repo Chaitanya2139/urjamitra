@@ -32,6 +32,191 @@
   gap: 2rem;
 }
 
+/* Management Plan Styles */
+.management-plan {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.plan-section {
+  margin-bottom: 2rem;
+}
+
+.plan-section:last-child {
+  margin-bottom: 0;
+}
+
+.plan-section h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.summary {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 0;
+  color: #1565c0;
+  font-weight: 500;
+}
+
+.allocation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.allocation-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e1e5e9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.appliance-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.appliance-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.priority-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-essential {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.priority-high {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.priority-medium {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.priority-low {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.allocation-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.time-slot {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.power-source {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.power-source.direct-solar,
+.power-source.solar {
+  background: #fff8e1;
+  color: #f57c00;
+}
+
+.power-source.battery {
+  background: #e1f5fe;
+  color: #0277bd;
+}
+
+.power-source.solar-battery {
+  background: #f1f8e9;
+  color: #558b2f;
+}
+
+.battery-advice {
+  background: #e1f5fe;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 0;
+  color: #0277bd;
+  font-weight: 500;
+}
+
+.alerts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alert-item {
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ffeaa7;
+  font-weight: 500;
+}
+
+.error-message {
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .allocation-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .allocation-details {
+    align-items: flex-start;
+  }
+  
+  .overview-cards {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.solar-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .overview-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -44,6 +229,12 @@
   border-radius: 10px;
   text-align: center;
   border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .overview-card h3 {
